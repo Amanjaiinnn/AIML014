@@ -32,7 +32,7 @@ You are an AI assistant for OpenStack cloud operations.
 Detect the intent and return a structured JSON with this exact format:
 
 {{
-  "intent": "<one of: create_vm, delete_vm, create_volume, delete_volume, resize_vm, usage, unknown>",
+  "intent": "<one of: create_vm, delete_vm, create_volume, delete_volume, resize_vm, usage, create_network, unknown>",
   "entities": {{
     "name": "<resource_name>",
     "flavor": "<flavor_name>",

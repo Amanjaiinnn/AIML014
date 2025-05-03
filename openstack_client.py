@@ -1,190 +1,9 @@
-# # # import os
-# # # import requests
-# # # from dotenv import load_dotenv
-
-# # # load_dotenv()
-
-# # # AUTH_URL = os.getenv("OS_AUTH_URL")
-# # # USERNAME = os.getenv("OS_USERNAME")
-# # # PASSWORD = os.getenv("OS_PASSWORD")
-# # # PROJECT_NAME = os.getenv("OS_PROJECT_NAME")
-# # # USER_DOMAIN = os.getenv("OS_USER_DOMAIN_NAME")
-# # # PROJECT_DOMAIN = os.getenv("OS_PROJECT_DOMAIN_NAME")
-
-# # # def get_token():
-# # #     url = f"{AUTH_URL}/v3/auth/tokens"
-# # #     data = {
-# # #         "auth": {
-# # #             "identity": {
-# # #                 "methods": ["password"],
-# # #                 "password": {
-# # #                     "user": {
-# # #                         "name": USERNAME,
-# # #                         "domain": {"name": USER_DOMAIN},
-# # #                         "password": PASSWORD
-# # #                     }
-# # #                 }
-# # #             },
-# # #             "scope": {
-# # #                 "project": {
-# # #                     "name": PROJECT_NAME,
-# # #                     "domain": {"name": PROJECT_DOMAIN}
-# # #                 }
-# # #             }
-# # #         }
-# # #     }
-# # #     headers = {"Content-Type": "application/json"}
-# # #     res = requests.post(url, json=data, headers=headers)
-# # #     return res.headers["X-Subject-Token"], res.json()
-
-# # # def create_vm(name, flavor):
-# # #     token, _ = get_token()
-# # #     compute_url = "https://api-ap-south-mum-1.openstack.acecloudhosting.com:8774/v2.1/servers"
-# # #     body = {
-# # #         "server": {
-# # #             "name": name,
-# # #             "imageRef": "your-image-id",
-# # #             "flavorRef": flavor,
-# # #             "networks": [{"uuid": "your-network-id"}]
-# # #         }
-# # #     }
-# # #     headers = {"X-Auth-Token": token, "Content-Type": "application/json"}
-# # #     res = requests.post(compute_url, json=body, headers=headers)
-# # #     return res.json()
-
-# # # Add similar stubs for resize_vm(), delete_vm(), create_network(), create_volume(), etc.
-
-# # # openstack_client.py
-
-# # import requests
-# # import os
-# # from dotenv import load_dotenv
-
-# # load_dotenv()
-
-# # # ENV vars
-# # AUTH_URL = os.getenv("OS_AUTH_URL")
-# # USERNAME = os.getenv("OS_USERNAME")
-# # PASSWORD = os.getenv("OS_PASSWORD")
-# # PROJECT_NAME = os.getenv("OS_PROJECT_NAME")
-# # USER_DOMAIN_NAME = os.getenv("OS_USER_DOMAIN_NAME", "Default")
-# # PROJECT_DOMAIN_NAME = os.getenv("OS_PROJECT_DOMAIN_NAME", "Default")
-# # COMPUTE_URL = os.getenv("OS_COMPUTE_URL")  # Example: https://...:8774/v2.1
-
-# # # def authenticate():
-# # #     """Authenticate and return the auth token and project ID."""
-# # #     url = f"{AUTH_URL}/auth/tokens"
-# # #     headers = {"Content-Type": "application/json"}
-# # #     body = {
-# # #         "auth": {
-# # #             "identity": {
-# # #                 "methods": ["password"],
-# # #                 "password": {
-# # #                     "user": {
-# # #                         "name": USERNAME,
-# # #                         "domain": {"name": USER_DOMAIN_NAME},
-# # #                         "password": PASSWORD
-# # #                     }
-# # #                 }
-# # #             },
-# # #             "scope": {
-# # #                 "project": {
-# # #                     "name": PROJECT_NAME,
-# # #                     "domain": {"name": PROJECT_DOMAIN_NAME}
-# # #                 }
-# # #             }
-# # #         }
-# # #     }
-
-# #     # res = requests.post(url, headers=headers, json=body)
-# #     # res.raise_for_status()
-
-# #     # token = res.headers.get("X-Subject-Token")
-# #     # project_id = res.json()["token"]["project"]["id"]
-
-# #     # return token, project_id
-
-# # def create_vm(name, flavor):
-# #     """Create a VM with given name and flavor."""
-# #     token= gAAAAABoFb_47N166hTtOUN622_Xf3tFSFodtA21KmJ6GV55x7XNfLeIOFhotU8zuc-C1DonkFyYktJ_xCfZe09VoRbaprCi4wjVHohXyrlgUa31FVisK-mBhBfse-CBLKA9B4gwOgKwC3147d6R-IDjz5apecGYgvnTUOYGuWZ_srUvTeY0VTg
-# #     # ,
-# #     # project_id = authenticate()
-
-# #     url = f"{COMPUTE_URL}/servers"
-# #     headers = {
-# #     "X-Auth-Token": os.getenv("OS_AUTH_TOKEN"),
-# #     "Content-Type": "application/json"
-# # }
-
-    
-# #     # You may need to adjust imageRef and network UUIDs per your setup
-# #     server_data = {
-# #         "server": {
-# #             "name": name,
-# #             "imageRef": "your-image-id-here",  # Replace with actual image ID
-# #             "flavorRef": flavor,
-# #             "networks": [{"uuid": "your-network-id-here"}],  # Replace with actual network UUID
-# #         }
-# #     }
-
-# #     res = requests.post(url, headers=headers, json=server_data)
-# #     res.raise_for_status()
-# #     return res.json()
-
-# import os
-# import requests
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
-# AUTH_TOKEN = os.getenv("OS_AUTH_TOKEN")
-# PROJECT_ID = os.getenv("OS_PROJECT_ID")
-
-# COMPUTE_URL = "https://api-ap-south-mum-1.openstack.acecloudhosting.com:8774/v2.1"
-# NETWORK_URL = "https://api-ap-south-mum-1.openstack.acecloudhosting.com:9696"
-# IMAGE_URL = "https://api-ap-south-mum-1.openstack.acecloudhosting.com:9292"
-# FLAVOR_URL = COMPUTE_URL + "/flavors"
-
-# get_headers() = {
-#     "X-Auth-Token": AUTH_TOKEN,
-#     "Content-Type": "application/json"
-# }
-
-# def list_images():
-#     response = requests.get(f"{IMAGE_URL}/v2/images", headers=get_headers())
-#     return response.json().get("images", [])
-
-# def list_flavors():
-#     response = requests.get(f"{FLAVOR_URL}", headers=get_headers())
-#     return response.json().get("flavors", [])
-
-# def list_networks():
-#     response = requests.get(f"{NETWORK_URL}/v2.0/networks", headers=get_headers())
-#     return response.json().get("networks", [])
-
-# def create_vm(name, flavor_id, image_id, network_id):
-#     url = f"{COMPUTE_URL}/servers"
-#     payload = {
-#         "server": {
-#             "name": name,
-#             "imageRef": image_id,
-#             "flavorRef": flavor_id,
-#             "networks": [{"uuid": network_id}]
-#         }
-#     }
-#     response = requests.post(url, headers=get_headers(), json=payload)
-#     if response.status_code in [200, 202]:
-#         return response.json()
-#     else:
-#         raise Exception(f"Failed to create VM: {response.text}")
-
 import os
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-AUTH_TOKEN = os.getenv("OS_AUTH_TOKEN")
 PROJECT_ID = os.getenv("OS_PROJECT_ID")
 password=os.getenv("OS_PASSWORD")
 username=os.getenv("OS_USERNAME")
@@ -224,7 +43,7 @@ def get_openstack_token():
         raise Exception(f"Authentication failed: {response.status_code} {response.text}")
 
     token = response.headers.get("X-Subject-Token")
-    # catalog = response.json().get("token", {}).get("catalog", [])
+    
 
     return token
 
@@ -339,35 +158,7 @@ def create_vm(name, flavor_id, image_id, network_id):
     return r.json()
 
 
-# def create_vm(name, flavor_id, image_id, network_id):
-#     url = f"{COMPUTE_URL}/servers"
-#     payload = {
-#         "server": {
-#             "name": name,
-#             "imageRef": image_id,
-#             "flavorRef": flavor_id,
-#             "networks": [{"uuid": network_id}]
-#         }
-#     }
-#     r = requests.post(url, headers=get_headers(), json=payload)
-#     try:
-#         r.raise_for_status()
-#         return r.json()
-#     except requests.exceptions.HTTPError as e:
-#         print(f"❌ HTTP Error: {r.status_code} - {r.text}")
-#         raise
-#     except ValueError:
-#         print(f"❌ Invalid JSON response: {r.text}")
-#         raise
-
-    # print(image_id)
-    # print(flavor_id)
-    # r = requests.post(url, headers=get_headers(), json=payload)
-    # r.raise_for_status()
-    
-
-    # return r.json()
-
+#this is the delete vm function
 
 def delete_vm(name):
     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=get_headers()).json()["servers"]
@@ -379,38 +170,51 @@ def delete_vm(name):
     return f"Deleted VM: {name}"
 
 
-# def resize_vm(name, flavor_id):
-#     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=get_headers()).json()["servers"]
-#     server = next((s for s in servers if s["name"] == name), None)
-#     if not server:
-#         raise Exception(f"No VM named {name} found")
-#     payload = {
-#         "resize": {
-#             "flavorRef": flavor_id
-#         }
-#     }
-#     r = requests.post(f"{COMPUTE_URL}/servers/{server['id']}/action", headers=get_headers(), json=payload)
-#     r.raise_for_status()
-#     return f"Resized VM: {name}"
+def toggle_vm_status(name, action):
+    valid_actions = {
+        "start": "os-start",
+        "stop": "os-stop",
+        "pause": "pause",
+        "unpause": "unpause",
+        "suspend": "suspend",
+        "resume": "resume"
+    }
 
-def resize_vm(name, flavor_id):
-    # Get all servers
+    if action not in valid_actions:
+        raise ValueError("❌ Invalid action. Must be one of: start, stop, pause, unpause, suspend, resume")
+
+    # Find the VM by name
     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=get_headers()).json()["servers"]
     server = next((s for s in servers if s["name"] == name), None)
     if not server:
         raise Exception(f"❌ No VM named '{name}' found")
 
     server_id = server["id"]
+    payload = {valid_actions[action]: None}
+    r = requests.post(f"{COMPUTE_URL}/servers/{server_id}/action", headers=get_headers(), json=payload)
+    r.raise_for_status()
 
-    # Fetch detailed server info to check root device (volume-backed)
+    return f"✅ Action '{action}' performed on VM: {name}"
+
+def resize_vm(name, flavor_id):
+    servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=get_headers()).json()["servers"]
+    server = next((s for s in servers if s["name"] == name), None)
+    if not server:
+        raise Exception(f"❌ No VM named '{name}' found")
+
+    server_id = server["id"]
     server_details = requests.get(f"{COMPUTE_URL}/servers/{server_id}", headers=get_headers()).json()["server"]
 
-    # Check if VM is volume-backed (root device is not an ephemeral disk)
-    is_volume_backed = "block_device_mapping_v2" in server_details or server_details.get("OS-EXT-SRV-ATTR:root_device_name", "").startswith("/dev/")
+    # Detect volume-backed VM
+    is_volume_backed = server_details.get("image") is None
     if is_volume_backed:
-        raise Exception("❌ Resize not supported: Volume-backed VMs cannot be resized directly via API on this setup. Please recreate the VM with the desired flavor.")
+        raise Exception("❌ Resize not supported: Volume-backed VMs cannot be resized directly via API. Please recreate the VM with the desired flavor.")
 
-    # Proceed with resize for eligible VMs
+    # Ensure VM is SHUTOFF
+    toggle_vm_status("dev-box", "stop")
+    if server_details.get("status") != "SHUTOFF":
+        raise Exception(f"❌ VM must be SHUTOFF before resizing (current status: {server_details.get('status')})")
+
     payload = {
         "resize": {
             "flavorRef": flavor_id
@@ -444,6 +248,43 @@ def delete_volume(name):
     r.raise_for_status()
     return f"Deleted Volume: {name}"
 
+def create_network(name, cidr="192.168.0.0/24", ip_version=4):
+    headers = get_headers()
+
+    # 1. Create the network
+    network_payload = {
+        "network": {
+            "name": name,
+            "admin_state_up": True
+        }
+    }
+    net_res = requests.post(f"{NETWORK_URL}/v2.0/networks", headers=headers, json=network_payload)
+    net_res.raise_for_status()
+    network = net_res.json()["network"]
+
+    # 2. Create the subnet for this network
+    subnet_payload = {
+        "subnet": {
+            "name": f"{name}-subnet",
+            "network_id": network["id"],
+            "ip_version": ip_version,
+            "cidr": cidr,
+            "enable_dhcp": True
+        }
+    }
+    subnet_res = requests.post(f"{NETWORK_URL}/v2.0/subnets", headers=headers, json=subnet_payload)
+    subnet_res.raise_for_status()
+    subnet = subnet_res.json()["subnet"]
+
+    # 3. Return combined details
+    return {
+        "network_id": network["id"],
+        "network_name": network["name"],
+        "subnet_id": subnet["id"],
+        "subnet_name": subnet["name"],
+        "cidr": subnet["cidr"]
+    }
+
 def get_usage():
     r = requests.get(USAGE_URL, headers=get_headers())
     r.raise_for_status()
@@ -460,11 +301,10 @@ def get_project_usage_summary():
     
     usage_data = get_usage()["tenant_usage"]
 
-    # usage_data = usage.get("tenant_usage", {})
+   
     total_vcpus = usage_data.get("total_vcpus_usage", 0)
     total_ram_mb = usage_data.get("total_memory_mb_usage", 0)
-    # total_vcpus = usage_data["total_vcpus_usage"]
-    # total_ram_mb = usage_data["total_memory_mb_usage"]
+    
 
     # 2. Get GPU count from active flavors used by current servers
     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=headers).json()["servers"]
@@ -491,34 +331,3 @@ def get_project_usage_summary():
 
 
 
-# def get_project_usage_summary():
-#     headers = get_headers()
-
-#     usage_data = get_usage()["tenant_usage"]
-#     total_vcpus = usage_data["total_vcpus_usage"]
-#     total_ram_mb = usage_data["total_memory_mb_usage"]
-
-#     # Get unique flavors used by active servers
-#     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=headers).json()["servers"]
-#     flavor_ids = {s["flavor"]["id"] for s in servers}
-    
-#     gpu_count = 0
-#     for flavor_id in flavor_ids:
-#         r = requests.get(f"{COMPUTE_URL}/flavors/{flavor_id}/os-extra_specs", headers=headers)
-#         if r.status_code == 200:
-#             specs = r.json().get("extra_specs", {})
-#             gpu_count += int(specs.get("accel:gpu_count", 0))
-
-#     # Get total active volume size
-#     volumes = requests.get(f"{VOLUME_URL}/{PROJECT_ID}/volumes", headers=headers).json()["volumes"]
-#     total_volume_gb = sum(v["size"] for v in volumes if v["status"] != "deleted")
-
-#     # Format and return a clean summary
-#     summary = (
-#         f"📊 **Project Usage Summary**\n"
-#         f"• vCPUs: {round(total_vcpus, 2)}\n"
-#         f"• RAM: {round(total_ram_mb, 2)} MB\n"
-#         f"• GPUs: {gpu_count}\n"
-#         f"• Volumes: {total_volume_gb} GB"
-#     )
-#     return summary
