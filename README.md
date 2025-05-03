@@ -69,10 +69,10 @@ Once the application is running:
 ## 👥 Team Contributions
 
 This project is a result of the collaborative efforts of:
-* **Aman Jain**: *Project Lead & OpenStack Integration Specialist*
+* **Aman Jain**: *OpenStack Integration Specialist*
   * Oversaw the project's development and integrated OpenStack services.
-* **Shreeyansh Mittal**: *Backend Developer & Database Architect*
-  * Designed the database schema and developed backend functionalities.
+* **Shreeyansh Mittal**: *OpenStack Integration Specialist and handled the LLM integration*
+  * Responsible for the integration of apis.
 * **Anuj Sinha**: *Utility Module Developer & Code Optimizer*
   * Created utility functions and optimized code for better performance.
 
@@ -119,9 +119,9 @@ git push origin feature/your-feature-name
 ## 📬 Contact
 
 For any inquiries or feedback:
-* **Aman Jain**: aman.jain@example.com
-* **Shreeyansh Mittal**: shreeyansh.mittal@example.com
-* **Anuj Sinha**: anuj.sinha@example.com
+* **Aman Jain**: amanjain200310@gmail.com
+* **Shreeyansh Mittal**: shreeyanshmittal@gmail.com
+* **Anuj Sinha**: theanujsinha@gmail.com
 
 ---
 
