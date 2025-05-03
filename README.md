@@ -80,7 +80,7 @@ This project is a result of the collaborative efforts of:
 
 *A comprehensive walkthrough of the AIML014 system is available in the video below:*
 
-[Watch the Demo](https://www.youtube.com/watch?v=VIDEO_ID)
+[Watch the Demo](https://youtu.be/SCqb5lVjnLY)
 
 *Note: Replace VIDEO_ID with your actual YouTube video ID once available.*
 
