@@ -379,19 +379,47 @@ def delete_vm(name):
     return f"Deleted VM: {name}"
 
 
+# def resize_vm(name, flavor_id):
+#     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=get_headers()).json()["servers"]
+#     server = next((s for s in servers if s["name"] == name), None)
+#     if not server:
+#         raise Exception(f"No VM named {name} found")
+#     payload = {
+#         "resize": {
+#             "flavorRef": flavor_id
+#         }
+#     }
+#     r = requests.post(f"{COMPUTE_URL}/servers/{server['id']}/action", headers=get_headers(), json=payload)
+#     r.raise_for_status()
+#     return f"Resized VM: {name}"
+
 def resize_vm(name, flavor_id):
+    # Get all servers
     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=get_headers()).json()["servers"]
     server = next((s for s in servers if s["name"] == name), None)
     if not server:
-        raise Exception(f"No VM named {name} found")
+        raise Exception(f"❌ No VM named '{name}' found")
+
+    server_id = server["id"]
+
+    # Fetch detailed server info to check root device (volume-backed)
+    server_details = requests.get(f"{COMPUTE_URL}/servers/{server_id}", headers=get_headers()).json()["server"]
+
+    # Check if VM is volume-backed (root device is not an ephemeral disk)
+    is_volume_backed = "block_device_mapping_v2" in server_details or server_details.get("OS-EXT-SRV-ATTR:root_device_name", "").startswith("/dev/")
+    if is_volume_backed:
+        raise Exception("❌ Resize not supported: Volume-backed VMs cannot be resized directly via API on this setup. Please recreate the VM with the desired flavor.")
+
+    # Proceed with resize for eligible VMs
     payload = {
         "resize": {
             "flavorRef": flavor_id
         }
     }
-    r = requests.post(f"{COMPUTE_URL}/servers/{server['id']}/action", headers=get_headers(), json=payload)
+    r = requests.post(f"{COMPUTE_URL}/servers/{server_id}/action", headers=get_headers(), json=payload)
     r.raise_for_status()
-    return f"Resized VM: {name}"
+    return f"✅ Resize initiated for VM: {name}"
+
 
 
 def create_volume(name, size):
@@ -416,8 +444,81 @@ def delete_volume(name):
     r.raise_for_status()
     return f"Deleted Volume: {name}"
 
-
 def get_usage():
     r = requests.get(USAGE_URL, headers=get_headers())
     r.raise_for_status()
-    return r.json()
+    usage_data= r.json()["tenant_usage"]
+    usage_data.pop("server_usages",None)
+    return usage_data
+
+
+
+def get_project_usage_summary():
+    headers = get_headers()
+
+    # 1. Get basic usage (vCPUs, RAM)
+    
+    usage_data = get_usage()["tenant_usage"]
+
+    # usage_data = usage.get("tenant_usage", {})
+    total_vcpus = usage_data.get("total_vcpus_usage", 0)
+    total_ram_mb = usage_data.get("total_memory_mb_usage", 0)
+    # total_vcpus = usage_data["total_vcpus_usage"]
+    # total_ram_mb = usage_data["total_memory_mb_usage"]
+
+    # 2. Get GPU count from active flavors used by current servers
+    servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=headers).json()["servers"]
+    flavor_ids = {s["flavor"]["id"] for s in servers}
+    gpu_count = 0
+
+    for flavor_id in flavor_ids:
+        extra_resp = requests.get(f"{COMPUTE_URL}/flavors/{flavor_id}/os-extra_specs", headers=headers)
+        if extra_resp.status_code == 200:
+            specs = extra_resp.json().get("extra_specs", {})
+            gpu_count += int(specs.get("accel:gpu_count", 0))
+
+    # 3. Get total volume usage
+    volumes = requests.get(f"{VOLUME_URL}/{PROJECT_ID}/volumes", headers=headers).json()["volumes"]
+    total_volume_gb = sum(v["size"] for v in volumes if v["status"] != "deleted")
+
+    # 4. Return formatted summary
+    return {
+        "vCPUs used": round(total_vcpus, 2),
+        "RAM used (MB)": round(total_ram_mb, 2),
+        "GPUs used": gpu_count,
+        "Total Volume (GB)": total_volume_gb
+    }
+
+
+
+# def get_project_usage_summary():
+#     headers = get_headers()
+
+#     usage_data = get_usage()["tenant_usage"]
+#     total_vcpus = usage_data["total_vcpus_usage"]
+#     total_ram_mb = usage_data["total_memory_mb_usage"]
+
+#     # Get unique flavors used by active servers
+#     servers = requests.get(f"{COMPUTE_URL}/servers/detail", headers=headers).json()["servers"]
+#     flavor_ids = {s["flavor"]["id"] for s in servers}
+    
+#     gpu_count = 0
+#     for flavor_id in flavor_ids:
+#         r = requests.get(f"{COMPUTE_URL}/flavors/{flavor_id}/os-extra_specs", headers=headers)
+#         if r.status_code == 200:
+#             specs = r.json().get("extra_specs", {})
+#             gpu_count += int(specs.get("accel:gpu_count", 0))
+
+#     # Get total active volume size
+#     volumes = requests.get(f"{VOLUME_URL}/{PROJECT_ID}/volumes", headers=headers).json()["volumes"]
+#     total_volume_gb = sum(v["size"] for v in volumes if v["status"] != "deleted")
+
+#     # Format and return a clean summary
+#     summary = (
+#         f"📊 **Project Usage Summary**\n"
+#         f"• vCPUs: {round(total_vcpus, 2)}\n"
+#         f"• RAM: {round(total_ram_mb, 2)} MB\n"
+#         f"• GPUs: {gpu_count}\n"
+#         f"• Volumes: {total_volume_gb} GB"
+#     )
+#     return summary

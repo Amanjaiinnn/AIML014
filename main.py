@@ -191,7 +191,7 @@ def handle_intent(intent, entities):
         elif intent == "usage":
             usage = get_usage()
             print("\nCurrent Usage:")
-            print(json.dumps(usage, indent=2))
+            print(json.dumps(usage,indent=2))
 
         else:
             print("🤖 Unknown intent. Please rephrase your command.")
